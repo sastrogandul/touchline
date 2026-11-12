@@ -1,0 +1,12 @@
+(function(root){
+const leagues={
+'eng.1':{name:'Premier League',country:'Inggris',rounds:38,version:'EPL EGT-0.2',seed:'seed.json'},
+'esp.1':{name:'LaLiga',country:'Spanyol',rounds:38,version:'LaLiga EGT-0.2',seed:'seed-esp.1.json'},
+'ger.1':{name:'Bundesliga',country:'Jerman',rounds:34,version:'Bundesliga EGT-0.2',seed:'seed-ger.1.json'}};
+// Curated sporting geography; no political/ethnic identity coefficients.
+const cities={London:['Arsenal','Tottenham Hotspur','Chelsea','Fulham','Brentford','Crystal Palace','West Ham United'],Manchester:['Manchester City','Manchester United'],Liverpool:['Liverpool','Everton'],Barcelona:['Barcelona','Espanyol'],Madrid:['Real Madrid','Atlético Madrid','Atletico Madrid','Rayo Vallecano','Getafe'],Sevilla:['Sevilla','Real Betis'],Berlin:['Hertha Berlin','1. FC Union Berlin','Union Berlin'],Hamburg:['Hamburg SV','Hamburger SV','St. Pauli','FC St. Pauli']};
+const regions={Catalunya:['Barcelona','Espanyol','Girona'],Basque:['Athletic Club','Athletic Bilbao','Real Sociedad','Alavés','Alaves'],Ruhr:['Borussia Dortmund','Schalke 04','VfL Bochum']};
+const rivalries=[['Arsenal','Tottenham Hotspur','Derby London Utara'],['Manchester City','Manchester United','Derby Manchester'],['Liverpool','Everton','Derby Merseyside'],['Liverpool','Manchester United','Rivalitas Liverpool–Manchester United'],['Newcastle United','Sunderland','Derby Tyne–Wear'],['Barcelona','Espanyol','Derby Barcelona'],['Barcelona','Real Madrid','El Clásico'],['Real Madrid','Atlético Madrid','Derby Madrid'],['Sevilla','Real Betis','Derby Sevilla'],['Athletic Club','Real Sociedad','Derby Basque'],['Borussia Dortmund','Schalke 04','Revierderby'],['Bayern Munich','Borussia Dortmund','Der Klassiker'],['FC Cologne','Borussia Mönchengladbach','Derby Rheinland']];
+function context(g){const names=[g.home.name,g.away.name],city=Object.entries(cities).find(([,v])=>names.every(n=>v.includes(n)))?.[0]||null,region=Object.entries(regions).find(([,v])=>names.every(n=>v.includes(n)))?.[0]||null,rivalry=rivalries.find(([a,b])=>names.includes(a)&&names.includes(b))?.[2]||null;return{city,region,rivalry,kind:city?'city':region?'region':rivalry?'rivalry':null,labels:[rivalry,city?'Satu kawasan kota: '+city:null,region?'Regional: '+region:null].filter(Boolean)}}
+const api={leagues,context};if(typeof module==='object'&&module.exports)module.exports=api;else root.TouchlineLeagues=api;
+})(typeof window==='object'?window:globalThis);

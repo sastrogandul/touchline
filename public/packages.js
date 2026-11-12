@@ -1,0 +1,8 @@
+(function(root){
+const size=id=>id==='ger.1'?9:10;
+function upcoming(state,leagueId,now=Date.now()){return Object.values(state.games||{}).filter(g=>(g.leagueId||'eng.1')===leagueId&&g.season===state.season&&!g.done&&g.state==='STATUS_SCHEDULED'&&Number.isFinite(Date.parse(g.date))&&Date.parse(g.date)>now).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date)||String(a.id).localeCompare(String(b.id))).slice(0,size(leagueId))}
+function create(state,leagueId,now=Date.now()){const games=upcoming(state,leagueId,now);if(!games.length)return null;state.packages??={};const ids=games.map(g=>String(g.id));const old=Object.values(state.packages).find(p=>p.leagueId===leagueId&&p.gameIds.length===ids.length&&p.gameIds.every(id=>ids.includes(id)));if(old){state.activePackage=old.id;return old}const id='pack-'+leagueId+'-'+now+'-'+Object.keys(state.packages).length;const p={id,leagueId,createdAt:new Date(now).toISOString(),target:size(leagueId),gameIds:ids,fixtures:Object.fromEntries(games.map(g=>[g.id,JSON.parse(JSON.stringify(g))]))};state.packages[id]=p;state.activePackage=id;return p}
+function games(state,selection){const p=state.packages?.[selection];if(!p)return selection==='all'?Object.values(state.games||{}).filter(g=>g.season===state.season):[];return p.gameIds.map(id=>state.games[id]||p.fixtures[id]).filter(Boolean)}
+function contains(state,g,selection){return selection==='all'?g.season===state.season:!!state.packages?.[selection]?.gameIds.includes(String(g.id))}
+const api={size,upcoming,create,games,contains};if(typeof module==='object'&&module.exports)module.exports=api;else root.MatchPackages=api;
+})(typeof window==='object'?window:globalThis);

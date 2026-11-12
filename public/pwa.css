@@ -1,0 +1,1 @@
+.mobile-top{padding-top:max(10px,env(safe-area-inset-top))}main{padding-bottom:max(24px,env(safe-area-inset-bottom))}#mobileSidebar{padding-top:max(25px,env(safe-area-inset-top))!important}button[hidden]{display:none!important}#dataPanel p{overflow-wrap:anywhere}
